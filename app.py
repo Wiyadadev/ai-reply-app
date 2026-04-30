@@ -5,10 +5,10 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
 def home():
-    reply = None
+    reply = ""
 
     if request.method == "POST":
-        user_message = request.form["message"]
+        user_message = request.form.get("message", "")
         reply = "คุณพิมพ์ว่า: " + user_message
 
     return render_template("index.html", reply=reply)
