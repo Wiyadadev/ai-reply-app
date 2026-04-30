@@ -1,4 +1,4 @@
-_from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory
 from openai import OpenAI
 import os
 
