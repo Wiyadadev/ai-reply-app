@@ -1,17 +1,11 @@
 from flask import Flask
+import os
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "hello from Python"
-    response = None
+    return "Hello from Python 🚀"
 
-    if request.method == 'POST':
-        user_input = request.form.get('user_input')
-        response = "You said: " + user_input
-
-    return render_template('index.html', response=response)
-
-if __name__ == '__main__':
-    app.run()
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
