@@ -15,15 +15,18 @@ def home():
 # 🤖 AI CHAT
 @app.route("/chat", methods=["POST"])
 def chat():
-    user_message = request.json["message"]
+    try:
+    user_message = request.json.get("message")
 
     response = client.chat.completions.create(
         model="gpt-4.1-mini",
         messages=[
-            {"role": "system", "content": "You are a helpful assistant"},
             {"role": "user", "content": user_message}
         ]
     )
 
     reply = response.choices[0].message.content
     return jsonify({"reply": reply})
+
+except Exception as e:
+return jsonify({"error":str(e)})
