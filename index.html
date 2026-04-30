@@ -1,32 +1,96 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AI Chat</title>
-</head>
-<body>
-  <h2>💬 AI Chat</h2>
-
-  <div id="chat"></div>
-
-  <input id="msg" placeholder="พิมพ์ข้อความ..." />
-  <button onclick="send()">Send</button>
-
-  <script>
-    async function send() {
-      const msg = document.getElementById("msg").value;
-
-      const res = await fetch("/chat", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({message: msg})
-      });
-
-      const data = await res.json();
-
-      document.getElementById("chat").innerHTML += 
-        "<p><b>You:</b> " + msg + "</p>" +
-        "<p><b>Bot:</b> " + data.reply + "</p>";
+  <title>AI Reply</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: linear-gradient(135deg, #1a1a2e, #3a0ca3);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-  </script>
+
+    .box {
+      width: 400px;
+      background: #111;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    select, textarea {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: hotpink;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 15px;
+      background: #222;
+      padding: 10px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box">
+    <h2>💬 AI Reply</h2>
+
+    <select id="style">
+      <option value="cute">💖 Cute</option>
+      <option value="flirty">😏 Flirty</option>
+      <option value="funny">😂 Funny</option>
+    </select>
+
+    <textarea id="msg" placeholder="Paste chat here..."></textarea>
+
+    <button onclick="send()">Generate</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+<script>
+async function send() {
+  const msg = document.getElementById("msg").value;
+  const style = document.getElementById("style").value;
+
+  const res = await fetch("/chat", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({message: msg, style: style})
+  });
+
+  const data = await res.json();
+
+  if (data.reply) {
+    document.getElementById("result").innerText = data.reply;
+  } else {
+    document.getElementById("result").innerText = "Error: " + data.error;
+  }
+}
+</script>
+
 </body>
 </html>
