@@ -1,11 +1,29 @@
-from flask import Flask
+from flask import Flask, request, jsonify, send_from_directory
+from openai import OpenAI
 import os
 
-app = Flask(__name__)
+app = Flask(_name_)
 
+# 🔐 ใช้ API KEY จาก Render
+client = OpenAI(api_key=os.environ.get("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"))
+
+# 🌐 หน้าเว็บ
 @app.route("/")
 def home():
-    return "Hello from Python 🚀"
+    return send_from_directory(".", "index.html")
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+# 🤖 AI CHAT
+@app.route("/chat", methods=["POST"])
+def chat():
+    user_message = request.json["message"]
+
+    response = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant"},
+            {"role": "user", "content": user_message}
+        ]
+    )
+
+    reply = response.choices[0].message.content
+    return jsonify({"reply": reply})
