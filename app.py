@@ -4,8 +4,7 @@ from openai import OpenAI
 
 app = Flask(__name__)
 
-client = OpenAI(api_key=os.environ.get("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"))
-
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 @app.route("/", methods=["GET", "POST"])
 def home():
     result = None
@@ -14,11 +13,11 @@ def home():
         text = request.form.get("text")
         
         response = client.chat.completions.create(
-            model="gpt-4.1-mini",
-            messages=[{"role": "user", "content": text}]
+            model="gpt-40-mini",
+            messages=[{"role": "user", "content": "Hello"}]
         )
 
-        result = response.choices[0].message.content
+        result= response.choices[0].message.content
 
     return render_template("index.html", result=result)
 
