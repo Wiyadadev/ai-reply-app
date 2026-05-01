@@ -9,6 +9,17 @@
     <h1>AI Reply Assistant 🤖</h1>
 
     <form method="POST">
+       onsubmit="showLoading()">
+    <input type="text" name="text" placeholder="Ask me anything..." required>
+    <button type="submit">Generate</button>
+</form>
+
+<p id="loading" style="display:none;">🤖 กำลังคิด...</p>
+<script>
+function showLoading() {
+    document.getElementById("loading").style.display = "block";
+}
+</script>
         <input type="text" name="text" placeholder="Ask me anything..." />
         <button type="submit">Generate</button>
     </form>
