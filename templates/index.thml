@@ -1,17 +1,1 @@
-<!DOCTYPE html>
-<html>
-<body>
-
-<h1>AI Reply</h1>
-
-<form method="POST">
-    <input name="message">
-    <button type="submit">Send</button>
-</form>
-
-{% if reply %}
-<p>{{ reply }}</p>
-{% endif %}
-
-</body>
-</html>
+<h1>Hello from HTML 🎉</h1>
