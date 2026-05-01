@@ -10,7 +10,7 @@ def home():
     result = None
     
     if request.method == "POST":
-        text = request.form.get(text)
+        text = request.from.get("text") or " "
 
         try:
             response = client.chat.completions.create(
