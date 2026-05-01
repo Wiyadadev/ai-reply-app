@@ -1,11 +1,22 @@
-from flask import Flask, send_file
-import os
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Reply App</title>
+</head>
+<body>
 
-app = Flask(_name_)
+    <h1>AI Reply Assistant 🤖</h1>
 
-@app.route("/")
-def home():
-    return send_file("index.html")
+    <form method="POST">
+        <input type="text" name="text" placeholder="Type something..." />
+        <button type="submit">Generate</button>
+    </form>
 
-if _name_ == "_main_":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+    {% if result %}
+        <h3>Result:</h3>
+        <p>{{ result }}</p>
+    {% endif %}
+
+</body>
+</html>
