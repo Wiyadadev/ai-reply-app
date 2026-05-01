@@ -1,19 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 import os
 
 app = Flask(__name__)
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def home():
-    reply = ""
-
-    if request.method == "POST":
-        user_message = request.form.get("message", "")
-        reply = "คุณพิมพ์ว่า: " + user_message
-
-    return render_template("index.html", reply=reply)
-
-import os
+    return render_template("index.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
