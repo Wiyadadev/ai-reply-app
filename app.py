@@ -14,13 +14,14 @@ def home():
         
         response = client.chat.completions.create(
             model="gpt-40-mini",
-            messages=[{"role": "user", "content": "Hello"}]
+            messages=[{"role": "user", "content": "text"}]
         )
 
         result= response.choices[0].message.content
 
     return render_template("index.html", result=result)
-
+except Exception as e:
+result = str(e)
 
 if __name__== "_main_":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
