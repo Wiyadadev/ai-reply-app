@@ -14,7 +14,7 @@ def home():
 
         try:
             response = client.chat.completions.create(
-                model="gpt-40-mini",
+                model="gpt-4o-mini",
                 messages=[
                     {"role": "user", "content": text}
                 ]
