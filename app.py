@@ -12,15 +12,17 @@ def home():
     if request.method == "POST":
         text = request.form.get(text)
 
-            try:
-                response = client.chat.completions.create(
-                    model="gpt-40-mini",
-                    messages=[{"role": "user", "content": text}]
-                )
+        try:
+            response = client.chat.completions.create(
+                model="gpt-40-mini",
+                messages=[
+                    {"role": "user", "content": text}
+                ]
+            )
 
-                result= response.choices[0].message.content
-    except Exception as e:
-        result = str(e)
+            result= response.choices[0].message.content
+        except Exception as e:
+            result = str(e)
 
     return render_template("index.html", result=result)
 
