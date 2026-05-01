@@ -1,11 +1,17 @@
-from flask import Flask, send_file
+from flask import Flask, render_template, request
 import os
 
-app = Flask(__name__)
+app = Flask(__name_-)
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def home():
-    return send_file("index.html")
+    result = None
 
-if __name__== "_main_":
+    if request.method == "POST":
+        text = request.form.get("text")
+        result = f"You said: {text}"
+
+    return render_template("index.html", result=result)
+
+if _-name_-== "_main_":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
