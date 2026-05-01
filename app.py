@@ -1,11 +1,14 @@
-from flask import Flask, render_template
+from flask import Flask, send_file
 import os
 
-app = Flask(__name__, template_folder=os.path.join(os.getcwd(), "templates"))
+app = Flask(_name_)
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    return send_file("index.html")
 
-if __name__ == "__main__":
+if _name_ == "_main_":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+ส่งแล้ว
+เขียนข้อความ
+เขียนถึง Ple Wiyada
