@@ -20,7 +20,7 @@ This is a simple AI chatbot web application built with Flask and OpenAI API.
    python app.py
 
 ## Demo
-(Add screenshot here)
+(สกรีนช็อต 2026-05-02 103108.png)
 
 ## Author
 Wiyadadev
