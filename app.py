@@ -1,31 +1,37 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import os
 from openai import OpenAI
 
 app = Flask(__name__)
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-@app.route("/", methods=["GET", "POST"])
+
+# หน้าเว็บ
+@app.route("/")
 def home():
-    result = None
-    
-    if request.method == "POST":
-        text = request.form.get("text") or ""
+    return render_template("index.html")
 
-        try:
-            response = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {"role": "user", "content": text}
-                ]
-            )
+# 🔥 API สำหรับ chat
+@app.route("/generate", methods=["POST"])
+def generate():
+    try:
+        data = request.get_json()
+        prompt = data.get("prompt")
 
-            result= response.choices[0].message.content
-        except Exception as e:
-            result = str(e)
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
 
-    return render_template("index.html", result=result)
+        reply = response.choices[0].message.content
+
+        return jsonify({"reply": reply})
+
+    except Exception as e:
+        return jsonify({"reply": f"Error: {str(e)}"}), 500
 
 
-if __name__== "_main_":
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
