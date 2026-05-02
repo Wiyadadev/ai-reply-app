@@ -8,64 +8,38 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
-
 body {
-    background: #0f0f0f;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #1a1a2e, #0f0f0f);
     color: white;
     display: flex;
+    flex-direction: column;
     height: 100vh;
 }
 
-/* Sidebar */
-.sidebar {
-    width: 250px;
-    background: #111;
-    padding: 20px;
-    border-right: 1px solid #222;
-}
-
-.sidebar h2 {
-    margin-bottom: 20px;
-}
-
-.new-chat {
-    background: linear-gradient(135deg,#00f5ff,#6a00ff);
-    padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-    cursor: pointer;
-    margin-bottom: 20px;
-}
-
-.history {
-    font-size: 14px;
-    color: #aaa;
-}
-
-/* Main */
-.main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+/* Header */
+.header {
+    padding: 15px 20px;
+    font-weight: 600;
+    font-size: 18px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #222;
 }
 
 /* Chat */
-.chat-box {
+.chat {
     flex: 1;
-    padding: 20px;
     overflow-y: auto;
+    padding: 20px;
 }
 
 /* Message */
-.message {
+.msg {
     margin-bottom: 15px;
     display: flex;
+    animation: fadeIn 0.3s ease;
 }
 
 .user {
@@ -78,8 +52,9 @@ body {
 
 .bubble {
     max-width: 70%;
-    padding: 12px;
-    border-radius: 12px;
+    padding: 12px 16px;
+    border-radius: 15px;
+    font-size: 14px;
 }
 
 .user .bubble {
@@ -95,6 +70,7 @@ body {
     display: flex;
     padding: 15px;
     border-top: 1px solid #222;
+    background: #111;
 }
 
 input {
@@ -114,65 +90,52 @@ button {
     background: linear-gradient(135deg,#00f5ff,#6a00ff);
     color: white;
     cursor: pointer;
+    transition: 0.2s;
 }
 
-/* Scroll */
-.chat-box::-webkit-scrollbar {
-    width: 6px;
-}
-.chat-box::-webkit-scrollbar-thumb {
-    background: #444;
-    border-radius: 10px;
+button:hover {
+    transform: scale(1.05);
 }
 
-/* Typing animation */
+/* Animation */
+@keyframes fadeIn {
+    from {opacity:0; transform: translateY(10px);}
+    to {opacity:1; transform: translateY(0);}
+}
+
+/* Typing */
 .typing {
-    font-size: 14px;
+    font-size: 12px;
     color: #aaa;
     animation: blink 1s infinite;
 }
 
 @keyframes blink {
-    0% {opacity: 0.2;}
-    50% {opacity: 1;}
-    100% {opacity: 0.2;}
-}
-
-/* Toggle */
-.toggle {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    cursor: pointer;
+    0%{opacity:0.2;}
+    50%{opacity:1;}
+    100%{opacity:0.2;}
 }
 </style>
 </head>
 
 <body>
 
-<div class="sidebar">
-    <h2>🤖 AI Pro</h2>
-    <div class="new-chat" onclick="newChat()">+ New Chat</div>
-    <div class="history" id="history">No history</div>
-</div>
+<div class="header">🤖 AI Assistant</div>
 
-<div class="main">
-    <div class="chat-box" id="chat"></div>
+<div class="chat" id="chat"></div>
 
-    <div class="input-area">
-        <input type="text" id="prompt" placeholder="Type message...">
-        <button onclick="send()">Send</button>
-    </div>
+<div class="input-area">
+    <input type="text" id="prompt" placeholder="Type your message...">
+    <button onclick="send()">Send</button>
 </div>
 
 <script>
-let chatHistory = [];
+const chat = document.getElementById("chat");
+const input = document.getElementById("prompt");
 
 function addMessage(text, type) {
-    const chat = document.getElementById("chat");
-
     const msg = document.createElement("div");
-    msg.className = "message " + type;
+    msg.className = "msg " + type;
 
     const bubble = document.createElement("div");
     bubble.className = "bubble";
@@ -185,14 +148,18 @@ function addMessage(text, type) {
 }
 
 async function send() {
-    const input = document.getElementById("prompt");
-    const text = input.value;
+    const text = input.value.trim();
     if (!text) return;
 
     addMessage(text, "user");
     input.value = "";
 
-    addMessage("Typing...", "bot");
+    const typingMsg = document.createElement("div");
+    typingMsg.className = "msg bot";
+    typingMsg.innerHTML = `<div class="bubble typing">Typing...</div>`;
+    chat.appendChild(typingMsg);
+
+    chat.scrollTop = chat.scrollHeight;
 
     try {
         const res = await fetch("/generate", {
@@ -202,29 +169,21 @@ async function send() {
         });
 
         const data = await res.json();
-
-        document.querySelector(".bot:last-child").remove();
+        typingMsg.remove();
         addMessage(data.reply, "bot");
 
-        chatHistory.push(text);
-        updateHistory();
-
     } catch {
-        document.querySelector(".bot:last-child").remove();
+        typingMsg.remove();
         addMessage("Error ❌", "bot");
     }
 }
 
-function updateHistory() {
-    const historyBox = document.getElementById("history");
-    historyBox.innerHTML = chatHistory.map(h => `<div>• ${h}</div>`).join("");
-}
-
-function newChat() {
-    document.getElementById("chat").innerHTML = "";
-    chatHistory = [];
-    updateHistory();
-}
+// กด Enter ส่งได้
+input.addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        send();
+    }
+});
 </script>
 
 </body>
